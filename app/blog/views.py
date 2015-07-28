@@ -8,3 +8,7 @@ from flask import render_template
 def index():
     user = "alan"
     return render_template("blog/index.html",title = 'Home',user = user)
+
+@app.route('/about')
+def about():
+    return render_template("blog/about.html")
