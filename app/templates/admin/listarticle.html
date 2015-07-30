@@ -1,0 +1,180 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <div >
+        <div >
+            <div >
+
+                <h4>Article
+                    {% if keyword == None or keyword == ""%}
+                        <small>type is : {{ type|default("所有类型")}}</small>
+                    {% else %}
+                        <small>type is : {{ type|default("所有类型")}} and keyword is : {{ keyword|default("空") }}</small>
+                    {% endif %}
+                </h4>
+            </div>
+        </div>
+
+        <div >
+            <div >
+                <form action="{{ url_for('search_article') }}" method="post" name="searcharticle">
+                    <div>
+                        <select id="type" name="type">
+                            <option>所有类型</option>
+                            {% for category in categorys %}
+                                {% if category.name == type %}
+                                    <option selected="selected">{{ category }}</option>
+                                {% else %}
+                                    <option>{{ category }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="text" id="keyword" name="keyword"/>
+                    <a  href="{{ url_for('add_article') }}">+ Add article</a>
+                </form>
+
+
+            </div>
+        </div>
+
+        <div >
+            <table>
+                <thead>
+                <tr>
+                    <th >
+
+                        title
+                    </th>
+                    <th >
+                        <span ></span>created_at
+                    </th>
+                    <th >
+                        <span></span>view_count
+                    </th>
+                    <th >
+                        <span ></span>category
+                    </th>
+
+                    <th >
+                        <span ></span>tags
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for article in article.items %}
+                    <!-- row -->
+                    <tr >
+                        <td>
+
+                            <a href={{ url_for('edit_article',id=article.id) }}>{{ article.title }}</a>
+                        </td>
+                        <td >
+                            {{ article.created_at }}
+                        </td>
+                        <td  >
+                            {{ article.view_count }}
+                        </td>
+
+                        <td  >
+                            <a href={{ url_for('edit_category',id=article.category_id) }}>{{ article.categorys }}</a>
+                        </td>
+
+                        <td  >
+                            {% for tag in article.tags %}
+                                <a href="{{ url_for('edit_tag',id=tag.id) }}">{{ tag }}</a>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <ul  >
+                                <a href={{ url_for('edit_article',id=article.id) }} >  编辑</a>
+
+                                <a href={{ url_for('delete_article',id=article.id) }} onclick="return(confirm('确定删除？'))">删除</a>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <ul>
+
+                {% if not type %}
+                    {% if not keyword %}
+                        {% if article.items %}
+                            <li><a href="{{ url_for('list_article',page=1) }}">&#8249;&#8249;</a></li>
+                            {% for page in article.iter_pages(left_edge=2, left_current=article.pages, right_current=article.pages, right_edge=2) %}
+                                {% if page == article.page %}
+                                    <li><a class="active" href="{{ url_for('list_article',page=page) }}">{{ page }} of  {{ article.pages }}</a></li>
+                                {% else %}
+                                    <li><a class="active" href="{{ url_for('list_article',page=page) }}">{{ page }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            <li><a href="{{ url_for('list_article',page=article.pages) }}">&#8250;&#8250;</a></li>
+                        {% endif %}
+
+                    {% else %}
+                        {% if article.items %}
+                            <li><a href="{{ url_for('search_article',page=1,keyword=keyword) }}">&#8249;&#8249;</a></li>
+                            {% for page in article.iter_pages(left_edge=2, left_current=article.pages, right_current=article.pages, right_edge=2) %}
+                                {% if page == article.page %}
+                                    <li><a class="active" href="{{ url_for('search_article',page=page,keyword=keyword) }}">{{ page }} of  {{ article.pages }}</a></li>
+                                {% else %}
+
+                                    <li><a class="active" href="{{ url_for('search_article',page=page,keyword=keyword) }}">{{ page }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            <li><a href="{{ url_for('search_article',page=article.pages,keyword=keyword) }}">&#8250;&#8250;</a></li>
+                        {% endif %}
+
+                    {% endif %}
+
+                {% else %}
+                    {% if not keyword %}
+                        {% if article.items %}
+                            <li><a href="{{ url_for('search_article',page=1,type=type) }}">&#8249;&#8249;</a></li>
+                            {% for page in article.iter_pages(left_edge=2, left_current=article.pages, right_current=article.pages, right_edge=2) %}
+                                {% if page == article.page %}
+                                    <li><a class="active" href="{{ url_for('search_article',page=page,type=type) }}">{{ page }} of  {{ article.pages }}</a></li>
+                                {% else %}
+
+                                    <li><a class="active" href="{{ url_for('search_article',page=page,type=type) }}">{{ page }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            <li><a href="{{ url_for('search_article',page=article.pages,type=type) }}">&#8250;&#8250;</a></li>
+                        {% endif %}
+
+                    {% else %}
+
+                        {% if article.items %}
+                            <li><a href="{{ url_for('search_article',page=1,keyword=keyword,type=type) }}">&#8249;&#8249;</a></li>
+                            {% for page in article.iter_pages(left_edge=2, left_current=article.pages, right_current=article.pages, right_edge=2) %}
+                                {% if page == article.page %}
+                                    <li><a class="active" href="{{ url_for('search_article',page=page,keyword=keyword,type=type) }}">{{ page }} of  {{ article.pages }}</a></li>
+                                {% else %}
+
+                                    <li><a class="active" href="{{ url_for('search_article',page=page,keyword=keyword,type=type) }}">{{ page }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            <li><a href="{{ url_for('search_article',page=article.pages,keyword=keyword,type=type) }}">&#8250;&#8250;</a></li>
+                        {% endif %}
+
+
+                    {% endif %}
+
+
+                {% endif %}
+
+
+
+
+            </ul>
+        </div>
+
+    </div>
+
+{% endblock %}

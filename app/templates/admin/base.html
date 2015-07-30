@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+<link href="{{ url_for('static', filename='admin/css/selectize.default.css') }}" type="text/css" rel="stylesheet" />
+<script src="{{ url_for('static', filename='admin/js/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/selectize.js') }}"></script>
     <meta charset="UTF-8">
     {% if title %}
         <title>{{ title }} - microblog</title>
@@ -16,7 +20,10 @@
  {% else %}
 | <a href="{{ url_for('logout') }}">Logout</a>
 {% endif %}
+| <a href="{{ url_for('list_article') }}">Articles</a>
 | <a href="{{ url_for('list_category') }}">categorys</a>
+| <a href="{{ url_for('list_tag') }}">tags</a>
+
   {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>

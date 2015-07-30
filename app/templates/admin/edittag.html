@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+
+    <div>
+        <form action="{{ url_for('edit_tag',id=tag.id) }}" method="post" name="edit_tag">
+            {{tagform.hidden_tag()}}
+
+            <div >
+                <label>tag name:</label>
+                {{tagform.name(type="text",placeholder="name")}}
+                {% for error in tagform.errors.name %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+
+            </div>
+
+
+            <br>
+            <div >
+                <input type="submit" value="edit project" /><br>
+                <span>OR</span><br>
+                <a href="{{ url_for('list_tag') }}">cancel</a>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <div>
+        <form action="{{ url_for('add_category') }}" onSubmit="return ajaxForm()">
+            {{categoryform.hidden_tag()}}
+
+            <div >
+                <label>category name:</label>
+                {{categoryform.name(type="text",placeholder="name",id="categoryname")}}
+
+                {% for error in categoryform.errors.name %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+
+            </div>
+
+            <div >
+                <label>category description:</label>
+
+                {{categoryform.description(type="text",rows="9",placeholder="input description",id="categorydescription")}}
+                {% for error in categoryform.errors.context %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+            <br>
+            <div >
+                <input type="submit" value="add category" /><br>
+                <span>OR</span><br>
+                <input type="submit"  value="close this window" onclick="window.close();"/><br>
+            </div>
+
+
+
+        </form>
+    </div>
+
+      <script type="text/javascript">
+
+
+      function ajaxForm(){
+          $.ajax({
+              type: 'post',
+              url: "{{ url_for('save_category_to_article') }}",
+              dataType: 'json',
+              data:{
+                  'categoryname': $('#categoryname').val(),
+                  'categorydescription': $('#categorydescription').val(),
+              },
+              error: function(xhr, err){
+                  $("#error").empty();
+                   $("#error").append("name/description不能为空");
+              },
+              success: function(data, textStatus){
+                 window.returnValue =  data;
+                 window.close();
+              },
+
+          });
+          return false
+      }
+
+      </script>
+
+{% endblock %}

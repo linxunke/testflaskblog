@@ -1,0 +1,164 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <!-- left column -->
+    <div>
+        <form action="{{ url_for('edit_article',id=article.id) }}" method="post" name="add_article">
+            {{articleform.hidden_tag()}}
+
+            <div>
+                <label>article title:</label>
+                {{articleform.title(type="text",placeholder="title")}}
+                {% for error in articleform.errors.title %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+
+            </div>
+            <label>article context:</label>
+            <div >
+                {{articleform.context(type="text",rows="9")}}
+                {% for error in articleform.errors.context %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+
+
+
+            <div>
+                <label>created time:</label>
+                {{articleform.created_at(type="text",id="created_at",class="input-large datetimepicker")}}
+                {% for error in articleform.errors.created_at %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+            <div>
+                <label>article viewcount:</label>
+                {{articleform.view_count(placeholder="view_count")}}
+                {% for error in articleform.errors.view_count %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+            {#                         <div class="field-box">#}
+            {#                                <label>article comments:</label>#}
+            {#                                {{articleform.comments(style="width:500px ",multiple="",class="select2")}}#}
+            {#                                  {% for error in articleform.errors.comments %}#}
+            {#                                <span style="color: red;">[{{ error }}]</span>#}
+            {#                                        {% endfor %}#}
+            {#                         </div>#}
+
+            <div >
+                <label>article category:</label>
+                <select style="width:250px" id="category" name="category"  >
+                    {% for category in categorys  %}
+                        <option value="{{ category }}" />{{ category.name }}
+                    {% endfor %}
+                </select>
+
+                <a href="javascript:show_child();">add category</a>
+            </div>
+
+
+            <div class="field-box" >
+                <label>article tags:</label>
+                <select  multiple="multiple" id="tags" name="tags"  >
+                    {% for tag in tags  %}
+                        <option value="{{ tag }}" />{{ tag.name }}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <br>
+            <div class=" field-box ">
+                <input type="submit" class="btn-glow primary" value="edit article" />
+                <span>OR</span>
+                <a  href="{{ url_for('list_article') }}">cancel</a>
+            </div>
+
+        </form>
+    </div>
+
+
+
+     <script type="text/javascript">
+        $(function () {
+
+{#				var eventHandler = function(name) {#}
+{#					return function() {#}
+{#						console.log(name, arguments);#}
+{#						$('#log').append('<div><span class="name">' + name + '</span></div>');#}
+{#					};#}
+{#				};#}
+			$('#tags').selectize({
+					create          : true,
+{#					onChange        : eventHandler('onChange'),#}
+{#					onItemAdd       : eventHandler('onItemAdd'),#}
+{#					onItemRemove    : eventHandler('onItemRemove'),#}
+{#					onOptionAdd     : eventHandler('onOptionAdd'),#}
+{#					onOptionRemove  : eventHandler('onOptionRemove'),#}
+{#					onDropdownOpen  : eventHandler('onDropdownOpen'),#}
+{#					onDropdownClose : eventHandler('onDropdownClose'),#}
+{#					onFocus         : eventHandler('onFocus'),#}
+{#					onBlur          : eventHandler('onBlur'),#}
+{#					onInitialize    : eventHandler('onInitialize'),#}
+				});
+
+
+
+
+
+
+            // datepicker plugin
+            $('.datetimepicker').datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+        });
+
+
+function show_child()
+{
+
+    var child=window.showModalDialog("{{ url_for('add_category_to_article') }}","true", "status:no;help:no;");
+
+    if(child)
+    {
+        if(!window.close())
+        {
+
+            $("#category").empty();
+             $.ajax({
+                type:"get",
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                url:"{{ url_for('ajax_categorys') }}",
+                success:function(result){
+                  $.each(result,function(index,value){
+                        $("#category").append("<option value='"+value.name+"'>"+value.name+"</option>");
+                        if(value.id == child.id){
+                             $("#category").val(value.name);
+                        }
+                    })
+
+
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert(errorThrown);
+            },
+                async:false             //false表示同步
+                 }
+
+                );
+        }
+        else
+        {
+            window.close();
+            child.close();
+        }
+        }
+        else{
+       return;
+    }
+        }
+
+      </script>
+{% endblock %}

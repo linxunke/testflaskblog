@@ -116,3 +116,23 @@ class Article(db.Model):
     def __str__(self):
         return '%s' % (self.title)
 
+
+    @classmethod
+    def all_page(cls,page):
+         return  cls.query.order_by(cls.created_at.desc()).paginate(page,PER_PAGE,False)
+
+
+    @classmethod
+    def search_page(cls,page,keyword=None,category=None):
+        if category==None:
+            if keyword != None:
+                return cls.query.filter(Article.title.ilike('%%%s%%' % keyword)).paginate(page, PER_PAGE, False)
+            else:
+                return cls.query.order_by(Article.id.desc()).paginate(page, PER_PAGE, False)
+        else:
+            type = Category.query.filter_by(name=category).first()
+            if keyword != None:
+                return cls.query.filter_by(category_id=type.id).filter(Article.title.ilike('%%%s%%' % keyword)).paginate(page, PER_PAGE, False)
+            else:
+                return cls.query.filter_by(category_id=type.id).paginate(page, PER_PAGE, False)
+

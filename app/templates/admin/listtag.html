@@ -2,11 +2,31 @@
 
 {% block content %}
 
+
+        <h4>Tag
+        {% if keyword == None or keyword == ""%}
+            <small>All list</small>
+        {% else %}
+            <small>keyword in title : {{ keyword }}</small>
+        {% endif %}
+
+    </h4>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <h4>{{ message }} </h4>
+            {% endfor %}
+
+        {% endif %}
+    {% endwith %}
+
+
     <div >
         <div >
-            <form action="{{ url_for('search_category') }}" method="post" name="searchcategory">
+            <form action="{{ url_for('search_tag') }}" method="post" name="searchtag">
                 <input type="text"  id="keyword" name="keyword"/>
-                <a href="{{ url_for('add_category') }}">+ Add category</a>
+                <a href="{{ url_for('add_tag') }}">+ Add tag</a>
             </form>
 
 
@@ -20,28 +40,22 @@
                 <th >
                     name
                 </th>
-                <th >
-                    <span >Description</span>
-                </th>
-
             </tr>
             </thead>
             <tbody>
-            {% for category in category.items %}
+            {% for tag in tag.items %}
                 <!-- row -->
                 <tr >
                     <td>
 
-                        <a href={{ url_for('edit_category',id=category.id) }}>{{ category.name }}</a>
+                        <a href={{ url_for('edit_tag',id=tag.id) }}>{{ tag.name }}</a>
                     </td>
-                    <td >
-                        {{ category.description }}
-                    </td>
+
                     <td>
                         <ul >
-                            <a href={{ url_for('edit_category',id=category.id) }} >  edit</a>
+                            <a href={{ url_for('edit_tag',id=tag.id) }} >  edit</a>
 
-                            <a href={{ url_for('delete_category',id=category.id) }} onclick="return(confirm('确定删除？'))">delete</a>
+                            <a href={{ url_for('delete_tag',id=tag.id) }} onclick="return(confirm('确定删除？'))">delete</a>
                         </ul>
                     </td>
                 </tr>
@@ -53,30 +67,30 @@
     <div >
         <ul>
             {% if not keyword %}
-                {% if category.items %}
-                    <li><a href="{{ url_for('list_category',page=1) }}">&#8249;&#8249;</a></li>
-                    {% for page in category.iter_pages(left_edge=2, left_current=category.pages, right_current=category.pages, right_edge=2) %}
-                        {% if page == category.page %}
-                            <li><a href="{{ url_for('list_category',page=page) }}">{{ page }} of  {{ category.pages }}</a></li>
+                {% if tag.items %}
+                    <li><a href="{{ url_for('list_tag',page=1) }}">&#8249;&#8249;</a></li>
+                    {% for page in tag.iter_pages(left_edge=2, left_current=tag.pages, right_current=tag.pages, right_edge=2) %}
+                        {% if page == tag.page %}
+                            <li><a href="{{ url_for('list_tag',page=page) }}">{{ page }} of  {{ tag.pages }}</a></li>
                         {% else %}
 
-                            <li><a href="{{ url_for('list_category',page=page) }}">{{ page }}</a></li>
+                            <li><a href="{{ url_for('list_tag',page=page) }}">{{ page }}</a></li>
                         {% endif %}
                     {% endfor %}
-                    <li><a href="{{ url_for('list_category',page=category.pages) }}">&#8250;&#8250;</a></li>
+                    <li><a href="{{ url_for('list_tag',page=tag.pages) }}">&#8250;&#8250;</a></li>
                 {% endif %}
             {% else %}
-                {% if category.items %}
-                    <li><a href="{{ url_for('search_category',page=1,keyword=keyword) }}">&#8249;&#8249;</a></li>
-                    {% for page in category.iter_pages(left_edge=2, left_current=category.pages, right_current=category.pages, right_edge=2) %}
-                        {% if page == category.page %}
-                            <li><a  href="{{ url_for('search_category',page=page,keyword=keyword) }}">{{ page }} of  {{ category.pages }}</a></li>
+                {% if tag.items %}
+                    <li><a href="{{ url_for('search_tag',page=1,keyword=keyword) }}">&#8249;&#8249;</a></li>
+                    {% for page in tag.iter_pages(left_edge=2, left_current=tag.pages, right_current=tag.pages, right_edge=2) %}
+                        {% if page == tag.page %}
+                            <li><a  href="{{ url_for('search_tag',page=page,keyword=keyword) }}">{{ page }} of  {{ tag.pages }}</a></li>
                         {% else %}
 
-                            <li><a href="{{ url_for('search_category',page=page,keyword=keyword) }}">{{ page }}</a></li>
+                            <li><a href="{{ url_for('search_tag',page=page,keyword=keyword) }}">{{ page }}</a></li>
                         {% endif %}
                     {% endfor %}
-                    <li><a href="{{ url_for('search_category',page=category.pages,keyword=keyword) }}">&#8250;&#8250;</a></li>
+                    <li><a href="{{ url_for('search_tag',page=tag.pages,keyword=keyword) }}">&#8250;&#8250;</a></li>
                 {% endif %}
             {% endif %}
 
