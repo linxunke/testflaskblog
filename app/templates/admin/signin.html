@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+   {% block content %}
+<div>
+  <div>
+       <form action="" method="post" name="login">
+            {{form.hidden_tag()}}
+
+           <h6>傅sir 的 Blog</h6>
+
+        {{form.username(placeholder="Your username")}}<br>
+           {% for error in form.errors.username %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+       {{form.password(placeholder="Your password")}}<br>
+             {% for error in form.errors.password %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+          <div class="remember">
+
+             {{form.rememberme(id="remember-me",type="checkbox")}}
+              <label for="remember-me">Remember me</label>
+          </div>
+               <input type="submit" value="Sign In">
+
+       </form>
+  </div>
+</div>
+
+{% endblock %}

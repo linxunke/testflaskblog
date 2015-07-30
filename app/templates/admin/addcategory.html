@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <div>
+        <form action="{{ url_for('add_category') }}" method="post" name="add_category">
+            {{categoryform.hidden_tag()}}
+
+            <div >
+                <label>category name:</label>
+                {{categoryform.name(type="text",placeholder="name")}}
+
+                {% for error in categoryform.errors.name %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+
+            </div>
+
+            <div >
+                <label>category description:</label>
+
+                {{categoryform.description(type="text",rows="9",placeholder="input description")}}
+                {% for error in categoryform.errors.context %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+            <br>
+            <div >
+                <input type="submit" value="add project" /><br>
+                <span>OR</span><br>
+                <a  href="{{ url_for('list_category') }}">cancel</a>
+            </div>
+
+
+
+        </form>
+    </div>
+
+{% endblock %}
